@@ -5,8 +5,8 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic.base import View
 
-from .models import UserProfile
-from .forms import LoginForm
+from .models import UserProfile, EmailVerifyRecord
+from .forms import LoginForm, RegisterForm
 
 # Create your views here.
 
@@ -19,6 +19,34 @@ class CustomBackends(ModelBackend):
 				return user
 		except Exception as e:
 			return None
+
+
+# 注册
+class RegisterView(View):
+	def get(self, request):
+		return render(request, 'register.html')
+
+	def post(self, request):
+		register_form = RegisterForm(request.POST)
+		if register_form.is_valid():
+			email = request.POST.get('email', '')
+			password = request.POST.get('password', '')
+			captcha_1 = request.POST.get('captcha_1', '')
+			# 保存用户数据表
+			user = UserProfile()
+			user.email = email
+			user.password = password
+			user.save()
+			# 保存验证码表
+			emailVerifyRecord = EmailVerifyRecord()
+			emailVerifyRecord.code = captcha_1
+			emailVerifyRecord.email = email
+			emailVerifyRecord.save()
+			return render(request, 'index.html', locals())
+
+			pass
+		else:
+			return render(request, 'register.html', {'register_form': register_form})
 
 
 # 登录

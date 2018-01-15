@@ -22,7 +22,7 @@ from django.conf import settings
 
 import xadmin
 
-from users.views import LoginView
+from users.views import LoginView, RegisterView
 
 
 urlpatterns = [
@@ -31,5 +31,6 @@ urlpatterns = [
 
     url(r'^$', TemplateView.as_view(template_name='index.html'), name="index"),
     url(r'^login/$', LoginView.as_view(), name="login"),
+    url(r'^register/$', RegisterView.as_view(), name="register"),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
