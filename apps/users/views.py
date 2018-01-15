@@ -29,14 +29,13 @@ class LoginView(View):
 
 	def post(self, request):
 		login_form = LoginForm(request.POST)
-		if login_form.is_valid():
+		if login_form.is_valid():   # 验证form
 			username = request.POST.get('username', '')
 			password = request.POST.get('password', '')
 			user = authenticate(username=username, password=password)  # 验证登录名和密码
 			if user is not None:
 				login(request, user)
 				user_detail = UserProfile.objects.get(Q(username=username) | Q(email=username))
-				print (user_detail)
 				return render(request, 'index.html', locals())
 			else:
 				return render(request, 'login.html', {'message': '用户名或密码错误2'})
