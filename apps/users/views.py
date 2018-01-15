@@ -38,7 +38,7 @@ class LoginView(View):
 				user_detail = UserProfile.objects.get(Q(username=username) | Q(email=username))
 				return render(request, 'index.html', locals())
 			else:
-				return render(request, 'login.html', {'message': '用户名或密码错误2'})
+				return render(request, 'login.html', {'message': '用户名或密码错误！'})
 		else:
 			return render(request, 'login.html', {'login_form': login_form})
 
