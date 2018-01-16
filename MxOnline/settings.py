@@ -143,4 +143,13 @@ USE_TZ = False  # 有国际时间改为本地时间
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [ os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
+
+# 发送邮箱参数
+EMAIL_HOST = 'smtp.sina.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'w2_bmd9400@sina.com'
+EMAIL_HOST_PASSWORD = '19940710wh'
+EMAIL_USE_TLS = False
+EMAIL_FROM = 'w2_bmd9400@sina.com'
+

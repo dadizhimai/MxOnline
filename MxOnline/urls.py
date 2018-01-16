@@ -22,7 +22,8 @@ from django.conf import settings
 
 import xadmin
 
-from users.views import LoginView, RegisterView
+from users.views import LoginView, RegisterView, ActiveUserView, ForgetPasswordView, PwdResetView
+
 
 
 urlpatterns = [
@@ -33,5 +34,8 @@ urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name="login"),
     url(r'^register/$', RegisterView.as_view(), name="register"),
     url(r'^captcha/', include('captcha.urls')),
+    url(r'^active/(?P<active_code>.*)/$', ActiveUserView.as_view(), name='active'),
+    url(r'^pwd_reset/(?P<active_code>.*)/$', PwdResetView.as_view(), name='pwd_reset'),
+    url(r'^forget/$', ForgetPasswordView.as_view(), name='forgetpwd'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
