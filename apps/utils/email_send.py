@@ -10,6 +10,11 @@ from MxOnline.settings import EMAIL_FROM
 
 
 def random_str(randomlength=8):
+	"""
+	生成定制位数的随机字符串
+	:param randomlength:
+	:return:
+	"""
 	str = ''
 	chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 	length = len(chars)-1
@@ -19,6 +24,10 @@ def random_str(randomlength=8):
 	return str
 
 
+
+"""
+发送邮件
+"""
 def send_register_email(email, send_type='register'):
 	email_record = EmailVerifyRecord()  # 实例邮箱验证类
 	code = random_str(16)

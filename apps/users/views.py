@@ -1,10 +1,11 @@
 # coding=utf-8
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic.base import View
 from django.contrib.auth.hashers import  make_password
+from django.http import HttpResponseRedirect
 
 from .models import UserProfile, EmailVerifyRecord
 from .forms import LoginForm, RegisterForm, ForgetPasswordForm, PwdResetForm
@@ -81,7 +82,6 @@ class LoginView(View):
 			if user is not None:
 				if user.is_active:  # 验证是否激活
 					login(request, user)
-					# user_detail = UserProfile.objects.get(Q(username=username) | Q(email=username))
 					return render(request, 'index.html', locals())
 				else:
 					return render(request, 'login.html', {'message': '用户未激活！'})
@@ -89,6 +89,16 @@ class LoginView(View):
 				return render(request, 'login.html', {'message': '用户名或密码错误！'})
 		else:
 			return render(request, 'login.html', {'login_form': login_form})
+
+
+class LogoutView(View):
+	"""
+	用户登出
+	"""
+	def get(self, request):
+		logout(request)
+		from django.core.urlresolvers import reverse
+		return HttpResponseRedirect(reverse('index'))
 
 
 # 找回秘密
@@ -111,8 +121,8 @@ class ForgetPasswordView(View):
 
 # 重置密码
 class PwdResetView(View):
-	def get(self, request, active_code):
-		all_records = EmailVerifyRecord.objects.filter(code=active_code)
+	def get(self, request, reset_code):
+		all_records = EmailVerifyRecord.objects.filter(code=reset_code)
 		if all_records:
 			for record in all_records:
 				email = record.email  #
@@ -120,6 +130,8 @@ class PwdResetView(View):
 		else:
 			return render(request, 'active_fail.html')
 
+
+class ModifyPwdView(View):
 	def post(self, request):
 		reset_pwd_form = PwdResetForm(request.POST)
 		if reset_pwd_form.is_valid():
@@ -127,15 +139,15 @@ class PwdResetView(View):
 			password2 = request.POST.get('password2', '')
 			email = request.POST.get('email', '')
 			if password == password2:
-				user = UserProfile.objects.filter(email=email)
+				user = UserProfile.objects.get(email=email)
 				user.password = make_password(password)
 				user.save()
 				return render(request, 'login.html')
 			else:
-				return render(request, 'password_reset.html',{'meg': u'两次密码不一样'})
-
-
+				{'meg': u'两次密码不一样'}
+				return render(request, 'password_reset.html', locals())
 		else:
+			email = request.POST.get('email', '')
 			return render(request, 'password_reset.html', locals())
 
 

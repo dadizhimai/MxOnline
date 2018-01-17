@@ -29,7 +29,7 @@
 
 						<div class="personal">
                             <dl class="user fr">
-                                    <dd>{{ user_detail.username }}<img class="down fr" src="/static/images/top_down.png"/></dd>
+                                    <dd>{% if user.username %}{{ user.username }}{% else %}{{ user.email }}{% endif %}<img class="down fr" src="/static/images/top_down.png"/></dd>
                                 <dt><img width="20" height="20" src="/static/media/image/2016/12/default_big_14.png"/></dt>
                             </dl>
                             <div class="userdetail">         
@@ -37,12 +37,13 @@
 	                                <dt><img width="80" height="80" src="/static/media/image/2016/12/default_big_14.png"/></dt>
 	                                <dd>
 	                                    <h2>django</h2>
-	                                    <p>{{ user_detail.username }}</p>
+	                                    <p>{% if user.username %}{{ user.username }}{% else %}{{ user.email }}{% endif %}</p>
 	                                </dd>
                                 </dl>
                                 <div class="btn">
 	                                <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
-	                                <a class="fr" href="/logout/">退出</a>
+	                                <a class="fr" href="{% url 'logout' %}">退出</a>
+
                                 </div>
                             </div>
                         </div>
